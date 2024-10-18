@@ -5,6 +5,7 @@ import { Button } from "@/src/components/ui/button";
 import Image from "next/image";
 import { Logo } from "@/src/assets";
 import SearchDialog from "./SearchDialog";
+import { Menu, X } from "lucide-react";
 
 interface MenuItem {
   name: string;
@@ -22,81 +23,68 @@ const Header: React.FC = () => {
   ];
 
   return (
-    <header className="bg-white shadow-md">
-      <div className="container mx-auto px-4 py-4">
+    <header className="bg-white shadow-sm">
+      <div className="container mx-auto px-4 py-3">
         <div className="flex justify-between items-center">
-          <Link href="/" className="text-2xl font-bold text-[#22C55E]">
+          <Link href="/" className="flex items-center">
             <Image
               src={Logo}
               alt="Talent Tracker"
-              width={150}
-              height={60}
+              width={120}
+              height={40}
               className="cursor-pointer"
             />
           </Link>
-          <nav className="hidden md:flex items-center space-x-4">
-            {menuItems.map((item, index) => (
-              <Link
-                key={index}
-                href={item.path}
-                className="text-gray-600 hover:text-[#22C55E]"
-              >
-                {item.name}
-              </Link>
-            ))}
+
+          <div className="hidden md:flex items-center space-x-6">
+            <nav className="flex items-center space-x-4">
+              {menuItems.map((item, index) => (
+                <Link
+                  key={index}
+                  href={item.path}
+                  className="text-gray-600 hover:text-[#22C55E] transition-colors"
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </nav>
+
             <SearchDialog isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} />
-            <Button className="bg-[#22C55E] hover:bg-[#22C55E]/90 text-white">
+
+            <Button className="bg-[#22C55E] hover:bg-[#22C55E]/90 text-white transition-colors">
               Sign In
             </Button>
-          </nav>
+          </div>
 
-          <div className="flex items-center">
-            <div className="px-4 py-2">
-              <SearchDialog isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} />
-            </div>
-            <div className="md:hidden">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              >
-                <svg
-                  className="h-6 w-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16m-7 6h7"
-                  />
-                </svg>
-              </Button>
-            </div>
+          <div className="md:hidden flex items-center space-x-2">
+            <SearchDialog isOpen={isSearchOpen} setIsOpen={setIsSearchOpen} />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="text-gray-600 hover:text-[#22C55E] transition-colors"
+            >
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </Button>
           </div>
         </div>
       </div>
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden bg-white py-2">
+        <div className="md:hidden bg-white py-4 px-4 space-y-4">
           {menuItems.map((item, index) => (
             <Link
               key={index}
               href={item.path}
-              className="block px-4 py-2 text-gray-600 hover:bg-gray-100"
+              className="block py-2 text-gray-600 hover:text-[#22C55E] transition-colors"
             >
               {item.name}
             </Link>
           ))}
-          <div className="px-4 py-2">
-            <Button className="w-full bg-[#22C55E] hover:bg-[#22C55E]/90 text-white">
-              Sign In
-            </Button>
-          </div>
+          <Button className="w-full bg-[#22C55E] hover:bg-[#22C55E]/90 text-white transition-colors">
+            Sign In
+          </Button>
         </div>
       )}
     </header>

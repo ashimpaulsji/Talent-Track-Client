@@ -76,3 +76,7 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+.why-online {
+  @apply bg-card text-card-foreground;
+}
