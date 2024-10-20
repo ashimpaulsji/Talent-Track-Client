@@ -1,32 +1,32 @@
 import React from "react";
-import { Card, CardContent, CardFooter } from "@/src/components/ui/card";
+import { Card, CardContent } from "@/src/components/ui/card";
 import { Button } from "@/src/components/ui/button";
-import { Banknote, Calendar, Users } from "lucide-react";
+import { Search, Briefcase, Star } from "lucide-react";
 import { motion } from "framer-motion";
 
-const WhyOnline = () => {
+const WhyJobPortal = () => {
   const benefits = [
     {
-      icon: <Calendar className="w-8 h-8 text-green-500" />,
-      title: "Flexibility",
+      icon: <Search className="w-8 h-8 text-blue-500" />,
+      title: "Easy Job Search",
       description:
-        "Ramp up and down, from short-term engagements to full-time teams",
+        "Find your dream job quickly with our advanced search and matching algorithms.",
+      color: "bg-blue-50",
+      iconBg: "bg-blue-100",
+    },
+    {
+      icon: <Briefcase className="w-8 h-8 text-green-500" />,
+      title: "Efficient Hiring",
+      description: "Post jobs and find the perfect candidates faster than ever.",
       color: "bg-green-50",
       iconBg: "bg-green-100",
     },
     {
-      icon: <Banknote className="w-8 h-8 text-purple-500" />,
-      title: "Cost Saving",
-      description: "Pay only for hours worked. Hourly rates fit any budget.",
-      color: "bg-purple-50",
-      iconBg: "bg-purple-100",
-    },
-    {
-      icon: <Users className="w-8 h-8 text-orange-500" />,
-      title: "Access To Talent",
-      description: "Hire the best from around the world.",
-      color: "bg-orange-50",
-      iconBg: "bg-orange-100",
+      icon: <Star className="w-8 h-8 text-yellow-500" />,
+      title: "Quality Matches",
+      description: "Connect with top talent or find jobs that match your skills perfectly.",
+      color: "bg-yellow-50",
+      iconBg: "bg-yellow-100",
     },
   ];
 
@@ -54,7 +54,7 @@ const WhyOnline = () => {
 
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-white to-gray-50 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto">
+      <div className="container mx-auto">
         <motion.div
           className="text-center mb-12 relative z-10"
           initial={{ opacity: 0, y: -20 }}
@@ -62,11 +62,10 @@ const WhyOnline = () => {
           transition={{ duration: 0.6 }}
         >
           <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-gray-800">
-            Why Online Workteams?
+            Why Choose Our Job Portal?
           </h2>
           <p className="text-lg sm:text-xl text-gray-600 max-w-3xl mx-auto">
-            You have the opportunity to enlist top-tier talent. Right at this
-            moment. Right here with us.
+            Connecting talented professionals with exciting opportunities and helping employers find their ideal candidates.
           </p>
         </motion.div>
 
@@ -78,7 +77,7 @@ const WhyOnline = () => {
         >
           {benefits.map((benefit, index) => (
             <motion.div key={index} variants={itemVariants}>
-              <Card className={`${benefit.color} border-none shadow-lg h-full`}>
+              <Card className={`${benefit.color} border-none w-full shadow-lg h-full`}>
                 <CardContent className="pt-6 flex flex-col h-full">
                   <div
                     className={`${benefit.iconBg} w-16 h-16 rounded-full flex items-center justify-center mb-4`}
@@ -106,7 +105,7 @@ const WhyOnline = () => {
       </div>
 
       <motion.div
-        className="absolute top-0 left-0 w-64 h-64 bg-green-100 rounded-full mix-blend-multiply filter blur-xl opacity-70"
+        className="absolute top-0 left-0 w-64 h-64 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-70"
         animate={{
           scale: [1, 1.1, 1],
           x: [0, 10, 0],
@@ -119,7 +118,7 @@ const WhyOnline = () => {
         }}
       />
       <motion.div
-        className="absolute top-0 right-0 w-64 h-64 bg-purple-100 rounded-full mix-blend-multiply filter blur-xl opacity-70"
+        className="absolute top-0 right-0 w-64 h-64 bg-green-100 rounded-full mix-blend-multiply filter blur-xl opacity-70"
         animate={{
           scale: [1, 1.2, 1],
           x: [0, -15, 0],
@@ -132,7 +131,7 @@ const WhyOnline = () => {
         }}
       />
       <motion.div
-        className="absolute -bottom-8 left-20 w-64 h-64 bg-orange-100 rounded-full mix-blend-multiply filter blur-xl opacity-70"
+        className="absolute -bottom-8 left-20 w-64 h-64 bg-yellow-100 rounded-full mix-blend-multiply filter blur-xl opacity-70"
         animate={{
           scale: [1, 1.1, 1],
           x: [0, 20, 0],
@@ -148,4 +147,4 @@ const WhyOnline = () => {
   );
 };
 
-export default WhyOnline;
+export default WhyJobPortal;

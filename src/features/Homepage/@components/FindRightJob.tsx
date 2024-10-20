@@ -29,7 +29,7 @@ const FindRightJob = () => {
   };
 
   return (
-    <section className="bg-gradient-to-br from-white to-green-50 py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section className="bg-gradient-to-br from-white to-blue-50 py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
       <div className="container mx-auto">
         <div className="flex flex-col lg:flex-row items-center justify-between">
           <motion.div
@@ -46,7 +46,7 @@ const FindRightJob = () => {
               <span className="relative">
                 Job
                 <motion.span
-                  className="absolute bottom-0 left-0 w-full h-1 bg-green-400"
+                  className="absolute bottom-0 left-0 w-full h-1 bg-blue-400"
                   initial={{ width: 0 }}
                   animate={{ width: "100%" }}
                   transition={{ duration: 0.8, delay: 0.5 }}
@@ -58,12 +58,11 @@ const FindRightJob = () => {
               className="text-lg text-gray-600 mb-8"
               variants={itemVariants}
             >
-              Work with the largest network of independent professionals and get
-              things done—from quick turnarounds to big transformations.
+              Connect with a vast network of employers and opportunities to find the perfect job that matches your skills and aspirations.
             </motion.p>
             <motion.div variants={itemVariants}>
-              <Button className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105">
-                Apply Job
+              <Button className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-full text-lg font-semibold transition-all duration-300 transform hover:scale-105">
+                Search Jobs
                 <ArrowRight className="ml-2" />
               </Button>
             </motion.div>
@@ -76,10 +75,10 @@ const FindRightJob = () => {
           >
             <Image
               src={FindRighetJobBanner}
-              alt="Professional working on laptop"
+              alt="Professional searching for jobs"
               width={300}
               height={300}
-              className="   w-full h-full"
+              className="w-full h-full"
             />
           </motion.div>
         </div>

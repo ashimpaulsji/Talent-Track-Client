@@ -4,22 +4,22 @@ import { Check } from "lucide-react";
 import Image from "next/image";
 import { GoodWorkEnvrionmentBanner } from "@/src/assets";
 
-const GoodWorkEnvironment = () => {
+const JobPortalBenefits = () => {
   const features = [
     {
-      title: "See Work as it's Done",
+      title: "Efficient Job Matching",
       description:
-        "Check in on your contractors as easily as if you were in the same office.",
+        "Our advanced algorithms match job seekers with the most suitable opportunities based on their skills and preferences.",
     },
     {
-      title: "Build a Team of Experts",
+      title: "Streamlined Application Process",
       description:
-        "Select from a global talent pool of experts that will help you build business faster than ever.",
+        "Job seekers can easily apply to multiple positions with just a few clicks, saving time and effort.",
     },
     {
-      title: "Eliminate Payroll Hassle",
+      title: "Powerful Employer Tools",
       description:
-        "We'll manage payment and invoicing for all your hires providing you with everything you need to work at ease.",
+        "Employers can post jobs, manage applications, and communicate with candidates all in one place, simplifying the hiring process.",
     },
   ];
 
@@ -46,11 +46,11 @@ const GoodWorkEnvironment = () => {
   };
 
   return (
-    <section className="bg-gradient-to-br from-green-50 to-blue-50 py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
+    <section className="bg-gradient-to-br from-blue-50 to-green-50 py-16 px-4 sm:px-6 lg:px-8 overflow-hidden">
       <div className="container mx-auto">
-        <div className="flex flex-col lg:flex-row items-center justify-between">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-12">
           <motion.div
-            className="lg:w-1/2 mb-12 lg:mb-0"
+            className="lg:w-1/2"
             initial="hidden"
             animate="visible"
             variants={containerVariants}
@@ -59,9 +59,9 @@ const GoodWorkEnvironment = () => {
               className="text-4xl sm:text-5xl font-bold text-gray-800 mb-8"
               variants={itemVariants}
             >
-              Guaranteed Work.
+              Connect with
               <br />
-              Guaranteed Payment.
+              Opportunities
             </motion.h2>
             {features.map((feature, index) => (
               <motion.div
@@ -70,8 +70,8 @@ const GoodWorkEnvironment = () => {
                 variants={itemVariants}
               >
                 <div className="flex-shrink-0 mr-4">
-                  <div className="bg-green-100 rounded-full p-1">
-                    <Check className="w-5 h-5 text-green-600" />
+                  <div className="bg-blue-100 rounded-full p-1">
+                    <Check className="w-5 h-5 text-blue-600" />
                   </div>
                 </div>
                 <div>
@@ -89,11 +89,13 @@ const GoodWorkEnvironment = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="relative w-full h-[400px] sm:h-[500px]">
+            <div className="relative w-full aspect-square max-w-[500px] mx-auto">
               <Image
                 src={GoodWorkEnvrionmentBanner}
-                alt="Work environment collage"
-                layout="fill"
+                alt="Job seeker and employer interaction"
+
+                width={500}
+                height={500}
                 className="w-full h-full"
               />
               <motion.div
@@ -108,7 +110,7 @@ const GoodWorkEnvironment = () => {
               />
             </div>
             <motion.div
-              className="absolute top-1/2 -right-8 transform -translate-y-1/2"
+              className="absolute top-1/2 -right-8 transform -translate-y-1/2 hidden lg:block"
               animate={{ x: [0, 10, 0] }}
               transition={{ duration: 3, repeat: Infinity }}
             >
@@ -121,7 +123,7 @@ const GoodWorkEnvironment = () => {
               >
                 <path
                   d="M25 0C11.1929 0 0 11.1929 0 25C0 38.8071 11.1929 50 25 50C38.8071 50 50 38.8071 50 25C50 11.1929 38.8071 0 25 0ZM37.5 26.7857H26.7857V37.5H23.2143V26.7857H12.5V23.2143H23.2143V12.5H26.7857V23.2143H37.5V26.7857Z"
-                  fill="#22C55E"
+                  fill="#3B82F6"
                 />
               </svg>
             </motion.div>
@@ -132,4 +134,4 @@ const GoodWorkEnvironment = () => {
   );
 };
 
-export default GoodWorkEnvironment;
+export default JobPortalBenefits;
