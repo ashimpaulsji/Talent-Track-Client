@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  talent-tracker-client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    restart: always
+    container_name: talent-tracker-client
+    volumes:
+      - ./:/app
+      - /app/node_modules
+      - /app/.next
