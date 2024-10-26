@@ -6,7 +6,6 @@ import { Input } from "@/src/components/ui/input";
 import {
   Dialog,
   DialogContent,
-  DialogTrigger,
 } from "@/src/components/ui/dialog";
 import { Search, X, Clock } from "lucide-react";
 
@@ -29,11 +28,6 @@ const SearchDialog: React.FC<SearchDialogProps> = ({ isOpen, setIsOpen }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="ghost" size="icon" onClick={() => setIsOpen(true)}>
-          <Search className="h-5 w-5 text-gray-600" />
-        </Button>
-      </DialogTrigger>
       <DialogContent className="p-0 max-w-full w-full h-full sm:h-[80vh] sm:max-h-[600px] sm:w-[90vw] sm:max-w-[800px] top-0 sm:top-[10vh] translate-y-0 bg-white dark:bg-gray-900 rounded-lg shadow-xl">
         <div className="flex flex-col h-full">
           <div className="p-6 mt-4 border-b border-gray-200 dark:border-gray-700">
