@@ -3,5 +3,6 @@ import HeroLeftBanner from "./images/hero-left-banner.svg";
 import GoodWorkEnvrionmentBanner from "./images/GoodWorkEnvrionment.svg";
 import FindRighetJobBanner from "./images/FindRightJob.svg";
 import HiringBanner from "./images/hiring-banner.svg";
+import CompanyLogo from "./images/company-logo.png";
 
-export { Logo, HeroLeftBanner, GoodWorkEnvrionmentBanner,FindRighetJobBanner ,HiringBanner};
+export { Logo, CompanyLogo, HeroLeftBanner, GoodWorkEnvrionmentBanner, FindRighetJobBanner, HiringBanner };
