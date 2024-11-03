@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/src/components/ui/card";
 import { Button } from "@/src/components/ui/button";
@@ -5,12 +6,19 @@ import { ChevronRight, DollarSign, Clock } from 'lucide-react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { CompanyType } from '@/src/types/CompanyType';
+import { useRouter } from 'next/navigation';
 
 interface JobsTabProps {
   companyData: CompanyType;
 }
 
 const JobsTab: React.FC<JobsTabProps> = ({ companyData }) => {
+  const router = useRouter();
+
+  const handleApplyNow = (jobId: any) => {
+    router.push(`/apply/${jobId}`);
+  };
+
   return (
     <Card className="shadow-md">
       <CardHeader>
@@ -39,7 +47,9 @@ const JobsTab: React.FC<JobsTabProps> = ({ companyData }) => {
                   <Clock size={14} className="flex-shrink-0" />
                   <span>{position.job_type || 'Full-time'}</span>
                 </div>
-                <Button size="sm" className="text-xs sm:text-sm bg-blue-500 hover:bg-blue-600 text-white">
+                <Button
+                  onClick={() => handleApplyNow(position?.id)}
+                  size="sm" className="text-xs sm:text-sm bg-blue-500 hover:bg-blue-600 text-white">
                   Apply <ChevronRight size={14} className="ml-1" />
                 </Button>
               </div>
