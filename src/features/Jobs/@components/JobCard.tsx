@@ -17,8 +17,12 @@ export const JobCard = ({ job }: JobCardProps) => {
     const router = useRouter();
 
     const handleApplyNow = () => {
-        router.push(`/jobs/${job.id}`);
+        router.push(`/apply/${job?.id}`);
     };
+
+    const handleJobClick = () => {
+        router.push(`/jobs/${job?.id}`);
+    }
 
     return (
         <>
@@ -35,7 +39,7 @@ export const JobCard = ({ job }: JobCardProps) => {
                     </div>
                     <div className="flex-1 min-w-0">
                         <h3 className="font-semibold text-lg truncate cursor-pointer"
-                            onClick={handleApplyNow}
+                            onClick={handleJobClick}
                         >{job?.title ?? "Job Title"}</h3>
                         <div className="flex items-center gap-2 text-sm text-gray-600">
                             <MapPin className="h-3 w-3 flex-shrink-0" />
@@ -77,7 +81,9 @@ export const JobCard = ({ job }: JobCardProps) => {
                     <div className="font-semibold text-blue-600">
                         {job?.salary_range ?? "Salary Range"}
                     </div>
-                    <Button className={cn(blueTheme.accent, blueTheme["primary-foreground"])}>
+                    <Button className={cn(blueTheme.accent, blueTheme["primary-foreground"])}
+                        onClick={handleApplyNow}
+                    >
                         Apply Now
                         <ChevronDown className="ml-2 h-4 w-4" />
                     </Button>

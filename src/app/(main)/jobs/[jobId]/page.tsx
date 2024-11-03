@@ -6,7 +6,7 @@ const JobDetails = dynamic(() => import('@/src/features/Jobs/JobsDetails/JobsDet
 
 const JobDetailPage = ({ params }: { params: { jobId: string } }) => {
     const jobId = parseInt(params.jobId)
-    const job = jobs.find(j => j.id === jobId)
+    const job = jobs.find(j => j?.id === jobId)
 
     if (!job) {
         notFound()

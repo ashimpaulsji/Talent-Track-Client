@@ -7,24 +7,32 @@ import { Button } from "@/src/components/ui/button"
 import { Card, CardContent } from "@/src/components/ui/card"
 import { Separator } from "@/src/components/ui/separator"
 import { Badge } from "@/src/components/ui/badge"
-import { useMemo } from "react"
+import { useMemo, useState } from "react"
 import { Job } from "@/src/types/JobTypes"
 import { JobDetailsSkeleton } from "./@components/JobDetailsSkeleton"
 import { useRouter } from "next/navigation";
+import ShareModal from "./@components/ShareModal";
 const SimilarJobs = dynamic(() => import("./@components/SimilarJobs"), { ssr: false });
 const FeaturedJobs = dynamic(() => import("./@components/FeaturedJobs"), { ssr: false });
 
 
 export default function JobDetails({ job }: { job?: Job }) {
+    const [isShareModalOpen, setIsShareModalOpen] = useState(false)
     const encodedLocation = useMemo(() => encodeURIComponent(job?.location ?? ''), [job?.location]);
     const mapSrc = useMemo(() => {
         return `https://maps.google.com/maps?width=100%25&height=600&hl=en&q=${encodedLocation}+(${encodeURIComponent(job?.company_details?.company_name ?? '')})&t=&z=14&ie=UTF8&iwloc=B&output=embed`;
     }, [encodedLocation, job?.company_details?.company_name]);
     const router = useRouter();
 
+    const jobUrl = typeof window !== 'undefined' ? window.location.href : ''
+
     const handelViewSimilarJobs = () => {
         router.push(`/jobs/${job?.id}`);
     }
+
+    const handleApplyNow = () => {
+        router.push(`/apply/${job?.id}`);
+    };
 
     if (!job) {
         return <JobDetailsSkeleton />
@@ -50,7 +58,9 @@ export default function JobDetails({ job }: { job?: Job }) {
                             <p className="text-sm sm:text-base text-blue-600">{job.category}</p>
                         </div>
                         <div className="flex flex-wrap gap-2">
-                            <Button variant="outline" size="sm" className="text-blue-600 border-blue-300 hover:bg-blue-50">
+                            <Button
+                                onClick={() => setIsShareModalOpen(true)}
+                                variant="outline" size="sm" className="text-blue-600 border-blue-300 hover:bg-blue-50">
                                 <Share2 className="w-4 h-4 mr-2" />
                                 Share
                             </Button>
@@ -58,7 +68,11 @@ export default function JobDetails({ job }: { job?: Job }) {
                                 <BookmarkPlus className="w-4 h-4 mr-2" />
                                 Save
                             </Button>
-                            <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">Apply Now</Button>
+                            <Button
+                                size="sm"
+                                className="bg-blue-600 hover:bg-blue-700 text-white"
+                                onClick={handleApplyNow}
+                            >Apply Now</Button>
                         </div>
                     </div>
 
@@ -174,6 +188,13 @@ export default function JobDetails({ job }: { job?: Job }) {
                 <h2 className="text-lg sm:text-xl font-semibold text-blue-700">Featured Jobs</h2>
                 <FeaturedJobs />
             </div>
+
+            <ShareModal
+                isOpen={isShareModalOpen}
+                onClose={() => setIsShareModalOpen(false)}
+                jobTitle={job.title}
+                jobUrl={jobUrl}
+            />
         </div>
     )
 }
