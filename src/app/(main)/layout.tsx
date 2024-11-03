@@ -22,17 +22,16 @@ export const metadata: Metadata = {
     "Talent Tracker is a job portal for job seekers and employers to connect and find the best opportunities.",
 };
 
-
 export default function MainLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <div className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+    <main className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
       <Header />
-      <main>{children}</main>
+      <main className="min-h-screen">{children}</main>
       <Footer />
-    </div>
+    </main>
   );
 }
