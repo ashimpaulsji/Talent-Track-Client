@@ -1,31 +1,73 @@
-"use client"
-import React, { useState } from "react"
-import { useRouter } from "next/navigation"
-import { useForm, SubmitHandler } from "react-hook-form"
-import { motion } from "framer-motion"
-import { Input } from "@/src/components/ui/input"
-import { Button } from "@/src/components/ui/button"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/src/components/ui/card"
-import { Eye, EyeOff, Mail, Lock, Github, Linkedin, Facebook } from "lucide-react"
+"use client";
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { motion } from "framer-motion";
+import { Input } from "@/src/components/ui/input";
+import { Button } from "@/src/components/ui/button";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/src/components/ui/card";
+import {
+  Eye,
+  EyeOff,
+  Mail,
+  Lock,
+  Github,
+  Linkedin,
+  Facebook,
+} from "lucide-react";
+import { useAppDispatch } from "@/src/redux/hooks/reduxHooks";
+import { login as userLogin } from "@/src/redux/api/authApi";
+import toast from "react-hot-toast";
 
 type FormInputs = {
-  email: string
-  password: string
-  rememberMe: boolean
-}
+  email: string;
+  password: string;
+  rememberMe: boolean;
+};
 
 export default function Login() {
-  const [showPassword, setShowPassword] = useState(false)
-  const router = useRouter()
-  const { register, handleSubmit, formState: { errors } } = useForm<FormInputs>()
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormInputs>();
+  const dispatch = useAppDispatch();
 
-  const onSubmit: SubmitHandler<FormInputs> = (data) => {
-    console.log(data)
-  }
+  const onSubmit: SubmitHandler<FormInputs> = async (data) => {
+    try {
+      const resultAction = await dispatch(
+        userLogin({ email: data?.email, password: data?.password })
+      );
+
+      console.log(resultAction , 'resultAction=====>')
+      
+      if (userLogin.fulfilled.match(resultAction)) {
+        toast.success("Login successful!");
+        // router.push("/");
+      } else {
+        toast.error(
+          "Login failed. Please check your credentials and try again."
+        );
+      }
+
+    } catch (error) {
+      toast.error("An error occurred. Please try again.");
+      console.error("Login error:", error);
+    }
+  };
 
   const handleSignUpRedirect = () => {
-    router.push("/register")
-  }
+    router.push("/register");
+  };
 
   return (
     <motion.div
@@ -72,12 +114,16 @@ export default function Login() {
                   required: "Email is required",
                   pattern: {
                     value: /\S+@\S+\.\S+/,
-                    message: "Invalid email address"
-                  }
+                    message: "Invalid email address",
+                  },
                 })}
                 className="pl-12 pr-4 py-7 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-xl"
               />
-              {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>}
+              {errors.email && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.email.message}
+                </p>
+              )}
             </motion.div>
 
             <motion.div
@@ -94,8 +140,8 @@ export default function Login() {
                   required: "Password is required",
                   minLength: {
                     value: 8,
-                    message: "Password must be at least 8 characters"
-                  }
+                    message: "Password must be at least 8 characters",
+                  },
                 })}
                 className="pl-12 pr-12 py-7 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 text-xl"
               />
@@ -104,9 +150,17 @@ export default function Login() {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
               >
-                {showPassword ? <EyeOff className="h-6 w-6" /> : <Eye className="h-6 w-6" />}
+                {showPassword ? (
+                  <EyeOff className="h-6 w-6" />
+                ) : (
+                  <Eye className="h-6 w-6" />
+                )}
               </button>
-              {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>}
+              {errors.password && (
+                <p className="text-red-500 text-sm mt-1">
+                  {errors.password.message}
+                </p>
+              )}
             </motion.div>
 
             <motion.div
@@ -123,7 +177,10 @@ export default function Login() {
                 />
                 <span className="text-gray-700 text-lg">Remember me</span>
               </label>
-              <Button variant="link" className="text-blue-600 hover:text-blue-800 p-0 text-lg">
+              <Button
+                variant="link"
+                className="text-blue-600 hover:text-blue-800 p-0 text-lg"
+              >
                 Forgot Password?
               </Button>
             </motion.div>
@@ -152,7 +209,9 @@ export default function Login() {
               <span className="w-full border-t border-gray-300" />
             </div>
             <div className="relative flex justify-center text-sm uppercase">
-              <span className="bg-white px-2 text-gray-500">Or continue with</span>
+              <span className="bg-white px-2 text-gray-500">
+                Or continue with
+              </span>
             </div>
           </motion.div>
 
@@ -165,7 +224,7 @@ export default function Login() {
             {[
               { name: "Github", icon: Github },
               { name: "LinkedIn", icon: Linkedin },
-              { name: "Facebook", icon: Facebook }
+              { name: "Facebook", icon: Facebook },
             ].map((provider, index) => (
               <motion.div
                 key={provider.name}
@@ -210,5 +269,5 @@ export default function Login() {
         </CardFooter>
       </Card>
     </motion.div>
-  )
+  );
 }

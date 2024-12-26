@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "../styles/globals.scss";
+import Providers from "./providers";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
   title: "Talent Tracker",
@@ -14,7 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <Toaster />
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
