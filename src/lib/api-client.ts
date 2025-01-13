@@ -1,14 +1,24 @@
-import axios, { AxiosError, AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import { getAccessToken, refreshAccessToken, clearTokens } from './auth';
-import { envConfig } from '../config/env-config';
+import axios, {
+  AxiosError,
+  AxiosInstance,
+  AxiosRequestConfig,
+  AxiosResponse,
+  InternalAxiosRequestConfig,
+} from "axios";
+import { envConfig } from "../config/env-config";
+import { store } from "../redux/store";
+
+import { storageUtils } from "../utils/storage-util";
+import { selectToken } from "../redux/slices/authSlice";
 
 const API_BASE_URL = envConfig.API_BASE_URL;
+const AUTH_STORAGE_KEY = "authState";
 
 const createAxiosInstance = (baseURL: string): AxiosInstance => {
   return axios.create({
     baseURL,
     headers: {
-      'Content-Type': 'application/json',
+      "Content-Type": "application/json",
     },
     timeout: 10000,
   });
@@ -17,11 +27,21 @@ const createAxiosInstance = (baseURL: string): AxiosInstance => {
 export const publicApi = createAxiosInstance(API_BASE_URL);
 export const secureApi = createAxiosInstance(API_BASE_URL);
 
+const getAccessToken = (): string | null => {
+  const storeToken = selectToken(store.getState());
+  if (storeToken) return storeToken;
+
+  const authState = storageUtils.get<{ token: string | null }>(
+    AUTH_STORAGE_KEY
+  );
+  return authState?.token || null;
+};
+
 secureApi.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
-    const token = await getAccessToken();
+    const token = getAccessToken();
     if (token && config.headers) {
-      config.headers['Authorization'] = `Bearer ${token}`;
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
@@ -31,20 +51,14 @@ secureApi.interceptors.request.use(
 secureApi.interceptors.response.use(
   (response: AxiosResponse) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as AxiosRequestConfig & { _retry?: boolean };
+    const originalRequest = error.config as AxiosRequestConfig & {
+      _retry?: boolean;
+    };
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-      try {
-        const newToken = await refreshAccessToken();
-        if (newToken && originalRequest.headers) {
-          originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
-          return secureApi(originalRequest);
-        }
-      } catch (refreshError) {
-        clearTokens();
-        window.location.href = '/login';
-        return Promise.reject(refreshError);
-      }
+      storageUtils.remove(AUTH_STORAGE_KEY);
+      window.location.href = "/login";
+      return Promise.reject(error);
     }
     return Promise.reject(error);
   }
@@ -53,10 +67,14 @@ secureApi.interceptors.response.use(
 export const handleApiError = (error: unknown): never => {
   if (axios.isAxiosError(error)) {
     const serverError = error.response?.data;
-    if (serverError && typeof serverError === 'object' && 'message' in serverError) {
+    if (
+      serverError &&
+      typeof serverError === "object" &&
+      "message" in serverError
+    ) {
       throw new Error(serverError.message as string);
     }
-    throw new Error(error.message || 'An unexpected error occurred');
+    throw new Error(error.message || "An unexpected error occurred");
   }
   throw error;
 };

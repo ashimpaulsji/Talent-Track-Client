@@ -35,11 +35,13 @@ type FormInputs = {
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormInputs>();
+
   const dispatch = useAppDispatch();
 
   const onSubmit: SubmitHandler<FormInputs> = async (data) => {
@@ -47,18 +49,14 @@ export default function Login() {
       const resultAction = await dispatch(
         userLogin({ email: data?.email, password: data?.password })
       );
-
-      console.log(resultAction , 'resultAction=====>')
-      
       if (userLogin.fulfilled.match(resultAction)) {
         toast.success("Login successful!");
-        // router.push("/");
+        router.push("/");
       } else {
         toast.error(
           "Login failed. Please check your credentials and try again."
         );
       }
-
     } catch (error) {
       toast.error("An error occurred. Please try again.");
       console.error("Login error:", error);

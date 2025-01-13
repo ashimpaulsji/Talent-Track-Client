@@ -1,67 +1,119 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { login, register } from "../api/authApi";
+import { storageUtils } from "@/src/utils/storage-util";
 
-export interface IAuthState {
-  authState: boolean;
-  userID: any;
-  userName: string;
+// Define the shape of the user object
+export interface IUser {
+  id: string | null;
+  first_name: string;
+  last_name: string;
   email: string;
-  number: string;
-  gender?: string;
-  city?: string;
-  interestedCourse?: string;
+  country: string;
 }
 
+// Define the shape of the auth state
+export interface IAuthState {
+  isAuthenticated: boolean;
+  user: IUser | null;
+  token: string | null;
+}
+
+// Define the initial state
 const initialState: IAuthState = {
-  authState: false,
-  userID: null,
-  userName: "",
-  email: "",
-  number: "",
-  gender: "",
-  city: "",
-  interestedCourse: "",
+  isAuthenticated: false,
+  user: null,
+  token: null,
 };
 
-let clearSessionTimer: NodeJS.Timeout | null = null;
+// Define the key for storing auth state in local storage
+const AUTH_STORAGE_KEY = "authState";
 
+// Create the auth slice
 const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
     setAuthState: (state, action: PayloadAction<IAuthState>) => {
-      Object.assign(state, action.payload);
-      if (clearSessionTimer) {
-        clearTimeout(clearSessionTimer);
-      }
-      clearSessionTimer = setTimeout(() => {
-        clearSession();
-      }, 60 * 60 * 1000);
+      state.isAuthenticated = action.payload.isAuthenticated;
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+
+      storageUtils.set(AUTH_STORAGE_KEY, action.payload, {
+        useLocalStorage: true,
+      });
     },
     clearAuthState: (state) => {
-      Object.assign(state, initialState);
-      clearSession();
+      state.isAuthenticated = false;
+      state.user = null;
+      state.token = null;
+
+      storageUtils.remove(AUTH_STORAGE_KEY, { useLocalStorage: true });
     },
   },
   extraReducers: (builder) => {
     builder
       .addCase(login.fulfilled, (state, action) => {
-        Object.assign(state, action.payload);
-        state.authState = true;
+        state.isAuthenticated = true;
+        state.user = (action.payload as any).data.user;
+        state.token = (action.payload as any).data.authorization.token;
+
+        storageUtils.set(
+          AUTH_STORAGE_KEY,
+          {
+            isAuthenticated: true,
+            user: (action.payload as any).data.user,
+            token: (action.payload as any).data.authorization.token,
+          },
+          { useLocalStorage: true }
+        );
+      })
+      .addCase(login.rejected, (state) => {
+        state.isAuthenticated = false;
+        state.user = null;
+        state.token = null;
+
+        storageUtils.remove(AUTH_STORAGE_KEY, { useLocalStorage: true });
       })
       .addCase(register.fulfilled, (state, action) => {
-        Object.assign(state, action.payload);
-        state.authState = true;
+        state.isAuthenticated = true;
+        state.user = (action.payload as any).data.user;
+        state.token = (action.payload as any).data.authorization.token;
+
+        storageUtils.set(
+          AUTH_STORAGE_KEY,
+          {
+            isAuthenticated: true,
+            user: (action.payload as any).data.user,
+            token: (action.payload as any).data.authorization.token,
+          },
+          { useLocalStorage: true }
+        );
+      })
+      .addCase(register.rejected, (state) => {
+        state.isAuthenticated = false;
+        state.user = null;
+        state.token = null;
+
+        storageUtils.remove(AUTH_STORAGE_KEY, { useLocalStorage: true });
       });
   },
 });
 
+// Export the action creators
 export const { setAuthState, clearAuthState } = authSlice.actions;
 
-const clearSession = () => {
-  localStorage.removeItem('persist:auth');
-  localStorage.clear();
-  clearSessionTimer = null;
-};
-
+// Export the reducer
 export default authSlice.reducer;
+
+// Selector to get the auth state
+export const selectAuth = (state: { auth: IAuthState }) => state.auth;
+
+// Selector to check if the user is authenticated
+export const selectIsAuthenticated = (state: { auth: IAuthState }) =>
+  state.auth.isAuthenticated;
+
+// Selector to get the user
+export const selectUser = (state: { auth: IAuthState }) => state.auth.user;
+
+// Selector to get the token
+export const selectToken = (state: { auth: IAuthState }) => state.auth.token;
