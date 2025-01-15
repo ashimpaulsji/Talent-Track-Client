@@ -4,10 +4,24 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Menu, X, ChevronRight } from "lucide-react";
+import { Search, Menu, X, ChevronRight, User, LogOut } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/src/components/ui/dropdown-menu";
 import Logo from "@/src/components/ui/logo";
 import SearchDialog from "./SearchDialog";
+import { useAppSelector } from "@/src/redux/hooks/reduxHooks";
+import {
+  selectIsAuthenticated,
+  selectUser,
+} from "@/src/redux/slices/authSlice";
+import { useAuth } from "@/src/redux/hooks/useAuth";
 
 interface MenuItem {
   name: string;
@@ -18,6 +32,9 @@ const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const router = useRouter();
+  const isLogin = useAppSelector(selectIsAuthenticated);
+  const user = useAppSelector(selectUser);
+  const { logout } = useAuth();
 
   const menuItems: MenuItem[] = [
     { name: "Home", path: "/" },
@@ -28,6 +45,37 @@ const Header: React.FC = () => {
   const handleLoginPage = () => {
     router.push("/login");
   };
+
+  const UserMenu = () => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="relative h-8 w-8 rounded-full"
+        >
+          <User className="h-5 w-5" />
+        </Button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent className="w-56 mr-6 mt-4"  forceMount>
+        <DropdownMenuLabel className="font-normal">
+          <div className="flex flex-col space-y-1">
+            <p className="text-sm font-medium leading-none">
+              {user?.first_name} {user?.last_name}
+            </p>
+            <p className="text-xs leading-none text-muted-foreground">
+                {user?.email}
+            </p>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>Profile</DropdownMenuItem>
+        <DropdownMenuItem>Settings</DropdownMenuItem>
+        <DropdownMenuItem onClick={() => logout()}>Log out</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 
   return (
     <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
@@ -60,12 +108,16 @@ const Header: React.FC = () => {
               <Search size={20} className="text-gray-600" />
             </Button>
 
-            <Button
-              onClick={handleLoginPage}
-              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white transition-all duration-300 transform hover:scale-105 text-lg py-6 px-8 rounded-full shadow-md hover:shadow-lg"
-            >
-              Sign In
-            </Button>
+            {isLogin ? (
+              <UserMenu />
+            ) : (
+              <Button
+                onClick={handleLoginPage}
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white transition-all duration-300 transform hover:scale-105 text-lg py-6 px-8 rounded-full shadow-md hover:shadow-lg"
+              >
+                Sign In
+              </Button>
+            )}
           </div>
 
           <div className="md:hidden flex items-center space-x-2">
@@ -77,6 +129,18 @@ const Header: React.FC = () => {
             >
               <Search size={20} className="text-gray-600" />
             </Button>
+            {isLogin ? (
+              <UserMenu />
+            ) : (
+              <Button
+                onClick={handleLoginPage}
+                variant="outline"
+                size="sm"
+                className="text-blue-600 border-blue-600 hover:bg-blue-50"
+              >
+                Sign In
+              </Button>
+            )}
             <Button
               variant="ghost"
               size="icon"
@@ -132,17 +196,6 @@ const Header: React.FC = () => {
                     </motion.div>
                   ))}
                 </nav>
-                <div className="p-6 border-t">
-                  <Button
-                    onClick={() => {
-                      handleLoginPage();
-                      setIsMobileMenuOpen(false);
-                    }}
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white transition-all duration-300 transform hover:scale-105 text-lg py-6 rounded-full shadow-md hover:shadow-lg"
-                  >
-                    Sign In
-                  </Button>
-                </div>
               </div>
             </div>
           </motion.div>
