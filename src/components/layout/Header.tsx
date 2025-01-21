@@ -8,6 +8,10 @@ import { Search, Menu, X, ChevronRight } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import Logo from "@/src/components/ui/logo";
 import SearchDialog from "./SearchDialog";
+import { useAppSelector } from "@/src/redux/hooks/reduxHooks";
+import { selectIsAuthenticated } from "@/src/redux/slices/authSlice";
+import ProfileDropdown from "./ProfileDropdown";
+import { useAuth } from "@/src/redux/hooks/useAuth";
 
 interface MenuItem {
   name: string;
@@ -18,6 +22,8 @@ const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const router = useRouter();
+  const { logout } = useAuth();
+  const isLogin = useAppSelector(selectIsAuthenticated);
 
   const menuItems: MenuItem[] = [
     { name: "Home", path: "/" },
@@ -60,12 +66,18 @@ const Header: React.FC = () => {
               <Search size={20} className="text-gray-600" />
             </Button>
 
-            <Button
-              onClick={handleLoginPage}
-              className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white transition-all duration-300 transform hover:scale-105 text-lg py-6 px-8 rounded-full shadow-md hover:shadow-lg"
-            >
-              Sign In
-            </Button>
+            {isLogin ? (
+              <>
+                <ProfileDropdown logout={logout} />
+              </>
+            ) : (
+              <Button
+                onClick={handleLoginPage}
+                className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white transition-all duration-300 transform hover:scale-105 text-lg py-6 px-8 rounded-full shadow-md hover:shadow-lg"
+              >
+                Sign In
+              </Button>
+            )}
           </div>
 
           <div className="md:hidden flex items-center space-x-2">
@@ -77,6 +89,13 @@ const Header: React.FC = () => {
             >
               <Search size={20} className="text-gray-600" />
             </Button>
+
+            {isLogin && (
+              <>
+                <ProfileDropdown logout={logout} />
+              </>
+            )}
+
             <Button
               variant="ghost"
               size="icon"
