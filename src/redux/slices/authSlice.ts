@@ -4,11 +4,12 @@ import { storageUtils } from "@/src/utils/storage-util";
 
 // Define the shape of the user object
 export interface IUser {
-  id: string | null;
+  id: string | number| null | undefined;
   first_name: string;
   last_name: string;
   email: string;
-  country: string;
+  country?: string;
+  role?:string;
 }
 
 // Define the shape of the auth state
@@ -33,6 +34,7 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
+
     setAuthState: (state, action: PayloadAction<IAuthState>) => {
       state.isAuthenticated = action.payload.isAuthenticated;
       state.user = action.payload.user;
@@ -42,6 +44,7 @@ const authSlice = createSlice({
         useLocalStorage: true,
       });
     },
+
     clearAuthState: (state) => {
       state.isAuthenticated = false;
       state.user = null;
@@ -67,6 +70,7 @@ const authSlice = createSlice({
           { useLocalStorage: true }
         );
       })
+
       .addCase(login.rejected, (state) => {
         state.isAuthenticated = false;
         state.user = null;
@@ -74,6 +78,7 @@ const authSlice = createSlice({
 
         storageUtils.remove(AUTH_STORAGE_KEY, { useLocalStorage: true });
       })
+      
       .addCase(register.fulfilled, (state, action) => {
         state.isAuthenticated = true;
         state.user = (action.payload as any).data.user;

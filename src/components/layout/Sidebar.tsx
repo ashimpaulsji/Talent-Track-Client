@@ -2,7 +2,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { Button } from "@/src/components/ui/button";
-import { LayoutDashboard, Users, Briefcase, Calendar, Settings, X } from 'lucide-react';
+import { LayoutDashboard, Users, Briefcase, Calendar, Settings, X, User } from 'lucide-react';
 import Logo from '../ui/logo';
 
 interface SidebarProps {
@@ -13,6 +13,7 @@ interface SidebarProps {
 
 const menuItems = [
     { href: '/dashboard', icon: LayoutDashboard, label: 'Dashboard', roles: ['admin', 'user'] },
+    { href: '/dashboard/profile', icon: User, label: 'Profile', roles: ['admin', 'user'] },
     { href: '/dashboard/applicants', icon: Users, label: 'Applicants', roles: ['admin'] },
     { href: '/dashboard/jobs', icon: Briefcase, label: 'Jobs', roles: ['admin', 'recruiter'] },
     { href: '/dashboard/schedule', icon: Calendar, label: 'Schedule', roles: ['admin', 'user'] },

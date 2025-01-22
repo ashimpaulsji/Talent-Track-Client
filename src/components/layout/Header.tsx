@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Menu, X, ChevronRight, User, LogOut } from "lucide-react";
+import { Search, Menu, X, ChevronRight, User } from "lucide-react";
 import { Button } from "@/src/components/ui/button";
 import {
   DropdownMenu,
@@ -16,11 +16,6 @@ import {
 } from "@/src/components/ui/dropdown-menu";
 import Logo from "@/src/components/ui/logo";
 import SearchDialog from "./SearchDialog";
-import { useAppSelector } from "@/src/redux/hooks/reduxHooks";
-import {
-  selectIsAuthenticated,
-  selectUser,
-} from "@/src/redux/slices/authSlice";
 import { useAuth } from "@/src/redux/hooks/useAuth";
 
 interface MenuItem {
@@ -32,9 +27,9 @@ const Header: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isSearchOpen, setIsSearchOpen] = useState<boolean>(false);
   const router = useRouter();
-  const isLogin = useAppSelector(selectIsAuthenticated);
-  const user = useAppSelector(selectUser);
-  const { logout } = useAuth();
+  const { isLogin, logout, loginUser } = useAuth();
+  const user = loginUser;
+  console.log("🚀 ~ user:", user);
 
   const menuItems: MenuItem[] = [
     { name: "Home", path: "/" },
@@ -58,21 +53,28 @@ const Header: React.FC = () => {
         </Button>
       </DropdownMenuTrigger>
 
-      <DropdownMenuContent className="w-56 mr-6 mt-4"  forceMount>
+      <DropdownMenuContent className="w-56 mr-6 mt-4" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">
               {user?.first_name} {user?.last_name}
             </p>
             <p className="text-xs leading-none text-muted-foreground">
-                {user?.email}
+              {user?.email}
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem>Settings</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => logout()}>Log out</DropdownMenuItem>
+
+        <DropdownMenuItem>
+          <Link href={"/dashboard/profile"}>Profile</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href={"/dashboard"}>Dashboard</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => logout()} className="cursor-pointer">
+          Log out
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
