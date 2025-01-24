@@ -10,13 +10,12 @@ import {
   updateEmployeeProfile,
 } from "@/src/redux/api/employeeApi";
 import ProfileForm from "../@componets/ProfileForm";
+import toast from "react-hot-toast";
 
 const ProfileComponent: React.FC = () => {
   const dispatch = useAppDispatch();
   const { userRole } = useAuth();
-  console.log("🚀 ~ userRole:", userRole)
-  const { profile, loading, error } = useAppSelector((state) => state.employee);
-  console.log("🚀 ~ profile:", profile)
+  const { profile, error } = useAppSelector((state) => state.employee);
 
   useEffect(() => {
     if (userRole === "employee") {
@@ -25,13 +24,19 @@ const ProfileComponent: React.FC = () => {
   }, [dispatch, userRole]);
 
   const handleSubmit = async (data: any) => {
-    
     if (userRole === "employee") {
-      
-      console.log("🚀 ~ handleSubmit ~ data:", data);
-      const result = await dispatch(updateEmployeeProfile(data));
-      console.log("🚀 ~ handleSubmit ~ result:", result)
-      
+      try {
+        const result = await dispatch(updateEmployeeProfile(data));
+        
+        if (result.type === "employee/updateProfile/fulfilled") {
+          toast.success("Profile updated successfully!");
+        } else {
+          toast.error("Failed to update profile. Please try again.");
+        }
+      } catch (error) {
+        console.error("Update error:", error);
+        toast.error("An error occurred. Please try again.");
+      }
     }
   };
 
@@ -44,7 +49,6 @@ const ProfileComponent: React.FC = () => {
       </Alert>
     );
   }
-
 
   return (
     <section className="container mx-auto p-6">

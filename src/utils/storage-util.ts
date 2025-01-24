@@ -1,20 +1,9 @@
-import Cookies from "js-cookie";
-
 export interface StorageOptions {
-  expires?: number | Date;
-  path?: string;
-  domain?: string;
-  secure?: boolean;
-  sameSite?: "strict" | "lax" | "none";
   useLocalStorage?: boolean;
 }
 
 const DEFAULT_OPTIONS: StorageOptions = {
-  expires: 1,
-  path: "/",
-  secure: process.env.NODE_ENV === "production",
-  sameSite: "strict",
-  useLocalStorage: false,
+  useLocalStorage: true,
 };
 
 export const storageUtils = {
@@ -24,18 +13,14 @@ export const storageUtils = {
 
     if (mergedOptions.useLocalStorage) {
       setLocalStorageItem(key, stringValue);
-    } else {
-      Cookies.set(key, stringValue, mergedOptions);
     }
   },
 
   get: <T>(key: string, defaultValue: T | null = null): T | null => {
     let value: string | null | undefined;
 
-    if (typeof window !== "undefined" && localStorage.getItem(key)) {
+    if (typeof window !== "undefined") {
       value = getLocalStorageItem(key);
-    } else {
-      value = Cookies.get(key);
     }
 
     if (value === undefined || value === null) return defaultValue;
@@ -51,8 +36,6 @@ export const storageUtils = {
 
     if (mergedOptions.useLocalStorage) {
       removeLocalStorageItem(key);
-    } else {
-      Cookies.remove(key, mergedOptions);
     }
   },
 
@@ -60,9 +43,6 @@ export const storageUtils = {
     if (typeof window !== "undefined") {
       localStorage.clear();
     }
-    Object.keys(Cookies.get()).forEach((cookieName) => {
-      Cookies.remove(cookieName);
-    });
   },
 };
 

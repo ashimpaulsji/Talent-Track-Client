@@ -4,12 +4,12 @@ import { storageUtils } from "@/src/utils/storage-util";
 
 // Define the shape of the user object
 export interface IUser {
-  id: string | number| null | undefined;
+  id: string | number | null | undefined;
   first_name: string;
   last_name: string;
   email: string;
   country?: string;
-  role?:string;
+  role?: string;
 }
 
 // Define the shape of the auth state
@@ -34,15 +34,12 @@ const authSlice = createSlice({
   name: "auth",
   initialState,
   reducers: {
-
     setAuthState: (state, action: PayloadAction<IAuthState>) => {
       state.isAuthenticated = action.payload.isAuthenticated;
       state.user = action.payload.user;
       state.token = action.payload.token;
 
-      storageUtils.set(AUTH_STORAGE_KEY, action.payload, {
-        useLocalStorage: true,
-      });
+      storageUtils.set(AUTH_STORAGE_KEY, action.payload);
     },
 
     clearAuthState: (state) => {
@@ -50,7 +47,7 @@ const authSlice = createSlice({
       state.user = null;
       state.token = null;
 
-      storageUtils.remove(AUTH_STORAGE_KEY, { useLocalStorage: true });
+      storageUtils.remove(AUTH_STORAGE_KEY);
     },
   },
   extraReducers: (builder) => {
@@ -60,46 +57,36 @@ const authSlice = createSlice({
         state.user = (action.payload as any).data.user;
         state.token = (action.payload as any).data.authorization.token;
 
-        storageUtils.set(
-          AUTH_STORAGE_KEY,
-          {
-            isAuthenticated: true,
-            user: (action.payload as any).data.user,
-            token: (action.payload as any).data.authorization.token,
-          },
-          { useLocalStorage: true }
-        );
+        storageUtils.set(AUTH_STORAGE_KEY, {
+          isAuthenticated: true,
+          user: (action.payload as any).data.user,
+          token: (action.payload as any).data.authorization.token,
+        });
       })
-
       .addCase(login.rejected, (state) => {
         state.isAuthenticated = false;
         state.user = null;
         state.token = null;
 
-        storageUtils.remove(AUTH_STORAGE_KEY, { useLocalStorage: true });
+        storageUtils.remove(AUTH_STORAGE_KEY);
       })
-      
       .addCase(register.fulfilled, (state, action) => {
         state.isAuthenticated = true;
         state.user = (action.payload as any).data.user;
         state.token = (action.payload as any).data.authorization.token;
 
-        storageUtils.set(
-          AUTH_STORAGE_KEY,
-          {
-            isAuthenticated: true,
-            user: (action.payload as any).data.user,
-            token: (action.payload as any).data.authorization.token,
-          },
-          { useLocalStorage: true }
-        );
+        storageUtils.set(AUTH_STORAGE_KEY, {
+          isAuthenticated: true,
+          user: (action.payload as any).data.user,
+          token: (action.payload as any).data.authorization.token,
+        });
       })
       .addCase(register.rejected, (state) => {
         state.isAuthenticated = false;
         state.user = null;
         state.token = null;
 
-        storageUtils.remove(AUTH_STORAGE_KEY, { useLocalStorage: true });
+        storageUtils.remove(AUTH_STORAGE_KEY);
       });
   },
 });

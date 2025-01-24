@@ -29,7 +29,7 @@ const Header: React.FC = () => {
   const router = useRouter();
   const { isLogin, logout, loginUser } = useAuth();
   const user = loginUser;
-  console.log("🚀 ~ user:", user);
+ 
 
   const menuItems: MenuItem[] = [
     { name: "Home", path: "/" },
@@ -45,11 +45,11 @@ const Header: React.FC = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button
-          variant="ghost"
+          variant="outline"
           size="icon"
-          className="relative h-8 w-8 rounded-full"
+          className="rounded-full w-10 h-10 border-gray-300 hover:bg-blue-50 hover:border-blue-300 transition-colors"
         >
-          <User className="h-5 w-5" />
+          <User size={20} className="text-gray-600" />
         </Button>
       </DropdownMenuTrigger>
 
@@ -64,14 +64,22 @@ const Header: React.FC = () => {
             </p>
           </div>
         </DropdownMenuLabel>
+
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>
-          <Link href={"/dashboard/profile"}>Profile</Link>
+        <DropdownMenuItem
+          className="cursor-pointer my-2"
+          onClick={() => router.push("/dashboard/profile")}
+        >
+          Profile
         </DropdownMenuItem>
-        <DropdownMenuItem>
-          <Link href={"/dashboard"}>Dashboard</Link>
+        <DropdownMenuItem
+          className="cursor-pointer"
+          onClick={() => router.push("/dashboard")}
+        >
+          Dashboard
         </DropdownMenuItem>
+
         <DropdownMenuItem onClick={() => logout()} className="cursor-pointer">
           Log out
         </DropdownMenuItem>
@@ -87,7 +95,7 @@ const Header: React.FC = () => {
             <Logo />
           </Link>
 
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-4">
             <nav className="flex items-center space-x-6">
               {menuItems.map((item, index) => (
                 <Link
